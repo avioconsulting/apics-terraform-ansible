@@ -76,29 +76,29 @@ The apics-terraform-ansible directory contains a few terraform files that are re
 ### Network Module
 The network module (in the network folder) contains all of the terraform automation to build out the network including a load balancer, and the networking required, including private and public subnets, and security roles.
 
-	| Name | Description |
-	| ---- | -------------- |
-	| variables.tf | Describes the variables used in the network module. |
-	| outputs.tf | Output values after creation (ids of the subnets). |
-	| vpc.tf | Details of all of the network resources, and their configurations. |
+| Name | Description |
+| ---- | -------------- |
+| variables.tf | Describes the variables used in the network module. |
+| outputs.tf | Output values after creation (ids of the subnets). |
+| vpc.tf | Details of all of the network resources, and their configurations. |
 	
 ### Compute Module
 The compute module (in the computer folder) contains all of the terraform automation to provision an AWS EC2 instance, and then invokes the Ansible scripts
 
-	| Name | Description |
-	| ---- | -------------- |
-	| variables.tf | Describes the variables used in the network module. |
-	| outputs.tf | Output values after creation (ids of the subnets). |
-	| compute.tf | Details of all of the compute resources, and their configurations and then executes the Ansible configurations. |
+| Name | Description |
+| ---- | -------------- |
+| variables.tf | Describes the variables used in the network module. |
+| outputs.tf | Output values after creation (ids of the subnets). |
+| compute.tf | Details of all of the compute resources, and their configurations and then executes the Ansible configurations. |
 
 ### Configure Module
 Technically not a module, but the configure folder contains the playbooks for Ansible to install software.
 	
-	| Name | Description |
-	| ---- | -------------- |
-	| playbook-install-jdk8.yml | Installation and configuration of Java |
-	| playbook-install-configure-join-apicsgatewaynode.yml | Installation and configuration of the API gateway node software. |
-	| userdata.sh | Configures swap on the EC2 instaces. |
+| Name | Description |
+| ---- | -------------- |
+| playbook-install-jdk8.yml | Installation and configuration of Java |
+| playbook-install-configure-join-apicsgatewaynode.yml | Installation and configuration of the API gateway node software. |
+| userdata.sh | Configures swap on the EC2 instaces. |
 
 ## terraform.template.tfvars Properties file
 A template properties file has been provided.  This will need to be filled out to execute any of the automation. 
