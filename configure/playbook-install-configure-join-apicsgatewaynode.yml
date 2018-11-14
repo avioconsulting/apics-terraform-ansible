@@ -20,19 +20,6 @@
     gateway_id: "{{gatewayid}}"
     my_token: "{{apicstoken}}"
 
-#    gateway_user: "gatewayuser"
-#    gateway_user_pass: "Gateway1234"
-#    gateway_manager_user: "avio.admin"
-#    gateway_manager_pass: "chunky@8MoTIf"
-#    gateway_manager_runtime_user: "avio.admin"
-#    gateway_manager_runtime_pass: "chunky@8MoTIf"
-#    # https://docs.oracle.com/en/cloud/paas/api-platform-cloud/apfad/finding-your-client-id-and-client-secret.html
-#    client_id: "7A29E0B76062424191DAE4ED71EAE0BA_APPID"
-#    client_secret: "e1e439ec-1310-4445-8311-80ffd9cee2ef"
-#    management_url: "https://apics-gse00015092.apiplatform.ocp.oraclecloud.com/apiplatform/management/v1"
-#    gateway_id: "100"
-#    my_token: "eyJ4NXQjUzI1NiI6IkNOdlZYM0xDcVdKaTFKUHVNWHE0dG1WdDRqcUh4NHR4MVVPQ1FBVHZ2SFUiLCJ4NXQiOiJ0VEtOc0NMUVItWDFLbHM3bHhkc1pxdHRjbGciLCJraWQiOiJTSUdOSU5HX0tFWSIsImFsZyI6IlJTMjU2In0.eyJ1c2VyX3R6IjoiQW1lcmljYVwvQ2hpY2FnbyIsInN1YiI6ImNsb3VkLmFkbWluIiwidXNlcl9sb2NhbGUiOiJlbiIsImlkcF9uYW1lIjoibG9jYWxJRFAiLCJ1c2VyLnRlbmFudC5uYW1lIjoiaWRjcy1lYWYwMzhhMzBmZGE0OTU0YjQ3MzkwOGFhMGYwNDAwNyIsImlkcF9ndWlkIjoibG9jYWxJRFAiLCJhbXIiOlsiVVNFUk5BTUVfUEFTU1dPUkQiXSwiaXNzIjoiaHR0cHM6XC9cL2lkZW50aXR5Lm9yYWNsZWNsb3VkLmNvbVwvIiwidXNlcl90ZW5hbnRuYW1lIjoiaWRjcy1lYWYwMzhhMzBmZGE0OTU0YjQ3MzkwOGFhMGYwNDAwNyIsImNsaWVudF9pZCI6IjdBMjlFMEI3NjA2MjQyNDE5MURBRTRFRDcxRUFFMEJBX0FQUElEIiwic3ViX3R5cGUiOiJ1c2VyIiwic2NvcGUiOiIuYXBpcGxhdGZvcm0iLCJjbGllbnRfdGVuYW50bmFtZSI6ImlkY3MtZWFmMDM4YTMwZmRhNDk1NGI0NzM5MDhhYTBmMDQwMDciLCJ1c2VyX2xhbmciOiJlbiIsImV4cCI6MTU0MjA0MTgwMSwiaWF0IjoxNTQyMDM4MjAxLCJjbGllbnRfZ3VpZCI6IjIxZDcwZjQ5MTVhZjQ2NzliM2FhZGVlYTBlMjA2ZjE5IiwiY2xpZW50X25hbWUiOiJBUElDU0FVVE9fYXBpY3MiLCJpZHBfdHlwZSI6IkxPQ0FMIiwidGVuYW50IjoiaWRjcy1lYWYwMzhhMzBmZGE0OTU0YjQ3MzkwOGFhMGYwNDAwNyIsImp0aSI6IjFlMTA1YWM3LWVlODMtNGYzMS05ZTk4LTczMWI0M2VlOGY2OSIsInVzZXJfZGlzcGxheW5hbWUiOiJDbG91ZCBBZG1pbiIsInN1Yl9tYXBwaW5nYXR0ciI6InVzZXJOYW1lIiwidG9rX3R5cGUiOiJBVCIsImF1ZCI6WyJodHRwczpcL1wvN0EyOUUwQjc2MDYyNDI0MTkxREFFNEVENzFFQUUwQkEuYXBpcGxhdGZvcm0ub2NwLm9yYWNsZWNsb3VkLmNvbTo0NDMiLCJ1cm46b3BjOmxiYWFzOmxvZ2ljYWxndWlkPTdBMjlFMEI3NjA2MjQyNDE5MURBRTRFRDcxRUFFMEJBIl0sInVzZXJfaWQiOiIwMDlmZjQ3MGRmMTQ0NjMwOTcxZmRlYzYyNTg3NjJkNCJ9.YgcY2ulEy6yLYi4T63oE-eKCf30HHgarm6NxaDZ0R5nnoYL6tlLoM0ADoHw0dA0ntGcE4WCZikHGSI7nlZzdonaGlDS1VKxX_hq4LDE_swq8nVuyHrx0GfgAsPpIVu_-Tw-yKXYAvE88Bzdcqy7EPf241h5NeDYX9Dhjxe7TJfrBZt2YPBmtxlw7lUwhXbPrUjCRAvnbTZILAuBM9IcR0gJp67b6qhDjc8bywlorN1kxjssByEj33k2Usn9O9d_odiECr9qnUFAcjXu_9h7ryeSrKAIXHVEXVtdYWv245JVtlb70O5_zHN-iQrwq22kqkHIZxdHVs-K5bfK1h1izxg"
-
   tasks:
   - name: Check if APICS already installed
     stat:
@@ -108,25 +95,6 @@
         'Please enter gateway runtime user*' : "{{gateway_manager_runtime_user}}"
         'Would you like to create-join instead*' : "y"
       creates: "/opt/oracle/gateway/GATEWAY_HOME"
-
-# Dialog when manually executing...
-#
-#2018-08-10 18:14:24,316 INFO Health status check execution is complete.
-#Please enter gateway manager user:
-#avio.admin
-#Password:
-#Please enter gateway manager client id:
-#7DA9D0E2587C4E1D859D3DE029316F88_APPID
-#Please enter gateway manager client secret:
-#1dd6fa38-c456-46ca-a115-a7c19d0423e4
-#Please enter gateway manager runtime user:
-#avio.admin
-#Password:
-#Please enter gateway manager runtime client id:
-#7DA9D0E2587C4E1D859D3DE029316F88_APPID
-#Please enter gateway manager runtime client secret:
-#1dd6fa38-c456-46ca-a115-a7c19d0423e4
-#2018-08-10 18:16:04,747 INFO joining gateway ...
 
   - yum: name=jq
 
