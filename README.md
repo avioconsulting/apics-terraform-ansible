@@ -68,7 +68,7 @@ The apics-terraform-ansible directory contains a few terraform files that are re
 
 | Name | Description |
 | ---- | -------------- |
-| terraform.template.tfvars | Property file, this NEEDS to be filled out.  See below for more details. |
+| [terraform.template.tfvars](https://github.com/avioconsulting/apics-terraform-ansible/tree/master#terraformtemplatetfvars-properties-file) | Property file, this NEEDS to be filled out.  See below for more details. |
 | variables.tf | Describes the variables used in the different modules. |
 | outputs.tf | Output values after creation (hostnames). |
 | base.tf | Executes the network and compute modules. |
@@ -88,7 +88,7 @@ The compute module (in the computer folder) contains all of the terraform automa
 | Name | Description |
 | ---- | -------------- |
 | variables.tf | Describes the variables used in the network module. |
-| outputs.tf | Output values after creation (ids of the subnets). |
+| outputs.tf | Output values after creation (hostnames). |
 | compute.tf | Details of all of the compute resources, and their configurations and then executes the Ansible configurations. |
 
 ### Configure Module
