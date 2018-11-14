@@ -1,0 +1,43 @@
+
+---
+- hosts: dev
+  remote_user: ec2-user
+  become: true
+  vars:
+    download_url: http://download.oracle.com/otn-pub/java/jdk/8u191-b12/2787e4a523244c269598db4e85c51e0c/jdk-8u191-linux-x64.tar.gz
+    download_folder: /opt
+    java_name: "{{download_folder}}/jdk1.8.0_191"
+    java_archive: "{{download_folder}}/jdk-8u191-linux-x64.tar.gz"
+# Make sure to visit https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
+# For the latest version of the jdk
+
+
+  tasks:
+  - name: Download Java
+    command: "wget -q -O {{java_archive}} --no-check-certificate --no-cookies --header 'Cookie: oraclelicense=accept-securebackup-cookie' {{download_url}} creates={{java_archive}} warn=no"
+
+  - name: Unpack archive
+    unarchive:
+      src: "{{java_archive}}"
+      dest: "{{download_folder}}"
+      creates: "{{java_name}}/bin/java"
+      remote_src: yes
+
+  - name: Fix ownership
+    file:
+      state: directory
+      path: "{{java_name}}"
+      owner: root
+      group: root
+      recurse: yes
+
+  - name: Make Java available for system
+    command: "alternatives --install /usr/bin/java java {{java_name}}/bin/java 18000"
+
+  - name: Create .sh script to set JAVA_HOME
+    copy:
+      content: "export JAVA_HOME={{java_name}}"
+      dest: /etc/profile.d/gatewaynode_env.sh
+
+  - name: Clean up
+    file: state=absent path={{java_archive}}

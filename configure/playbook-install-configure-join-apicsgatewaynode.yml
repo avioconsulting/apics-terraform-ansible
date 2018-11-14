@@ -1,0 +1,151 @@
+---
+- hosts: dev
+  remote_user: ec2-user
+  become: true
+  vars:
+    download_url: https://s3-us-west-2.amazonaws.com/avio-apics-gateway/ApicsGatewayInstaller.zip
+    download_folder: /opt/oracle/binaries
+    archive: "{{download_folder}}/ApicsGatewayInstaller.zip"
+    user: "ec2-user"
+    ## These values will passed in with the command line --extra-vars
+    gateway_user: "{{gatewayuser}}"
+    gateway_user_pass: "{{gatewayuserpass}}"
+    gateway_manager_user: "{{gatewaymanageruser}}"
+    gateway_manager_pass: "{{gatewaymanagerpass}}"
+    gateway_manager_runtime_user: "{{gatewaymanagerruntimeuser}}"
+    gateway_manager_runtime_pass: "{{gatewaymanagerruntimepass}}"
+    client_id: "{{clientid}}"
+    client_secret: "{{clientsecret}}"
+    management_url: "{{managementurl}}/apiplatform/management/v1"
+    gateway_id: "{{gatewayid}}"
+    my_token: "{{apicstoken}}"
+
+#    gateway_user: "gatewayuser"
+#    gateway_user_pass: "Gateway1234"
+#    gateway_manager_user: "avio.admin"
+#    gateway_manager_pass: "chunky@8MoTIf"
+#    gateway_manager_runtime_user: "avio.admin"
+#    gateway_manager_runtime_pass: "chunky@8MoTIf"
+#    # https://docs.oracle.com/en/cloud/paas/api-platform-cloud/apfad/finding-your-client-id-and-client-secret.html
+#    client_id: "7A29E0B76062424191DAE4ED71EAE0BA_APPID"
+#    client_secret: "e1e439ec-1310-4445-8311-80ffd9cee2ef"
+#    management_url: "https://apics-gse00015092.apiplatform.ocp.oraclecloud.com/apiplatform/management/v1"
+#    gateway_id: "100"
+#    my_token: "eyJ4NXQjUzI1NiI6IkNOdlZYM0xDcVdKaTFKUHVNWHE0dG1WdDRqcUh4NHR4MVVPQ1FBVHZ2SFUiLCJ4NXQiOiJ0VEtOc0NMUVItWDFLbHM3bHhkc1pxdHRjbGciLCJraWQiOiJTSUdOSU5HX0tFWSIsImFsZyI6IlJTMjU2In0.eyJ1c2VyX3R6IjoiQW1lcmljYVwvQ2hpY2FnbyIsInN1YiI6ImNsb3VkLmFkbWluIiwidXNlcl9sb2NhbGUiOiJlbiIsImlkcF9uYW1lIjoibG9jYWxJRFAiLCJ1c2VyLnRlbmFudC5uYW1lIjoiaWRjcy1lYWYwMzhhMzBmZGE0OTU0YjQ3MzkwOGFhMGYwNDAwNyIsImlkcF9ndWlkIjoibG9jYWxJRFAiLCJhbXIiOlsiVVNFUk5BTUVfUEFTU1dPUkQiXSwiaXNzIjoiaHR0cHM6XC9cL2lkZW50aXR5Lm9yYWNsZWNsb3VkLmNvbVwvIiwidXNlcl90ZW5hbnRuYW1lIjoiaWRjcy1lYWYwMzhhMzBmZGE0OTU0YjQ3MzkwOGFhMGYwNDAwNyIsImNsaWVudF9pZCI6IjdBMjlFMEI3NjA2MjQyNDE5MURBRTRFRDcxRUFFMEJBX0FQUElEIiwic3ViX3R5cGUiOiJ1c2VyIiwic2NvcGUiOiIuYXBpcGxhdGZvcm0iLCJjbGllbnRfdGVuYW50bmFtZSI6ImlkY3MtZWFmMDM4YTMwZmRhNDk1NGI0NzM5MDhhYTBmMDQwMDciLCJ1c2VyX2xhbmciOiJlbiIsImV4cCI6MTU0MjA0MTgwMSwiaWF0IjoxNTQyMDM4MjAxLCJjbGllbnRfZ3VpZCI6IjIxZDcwZjQ5MTVhZjQ2NzliM2FhZGVlYTBlMjA2ZjE5IiwiY2xpZW50X25hbWUiOiJBUElDU0FVVE9fYXBpY3MiLCJpZHBfdHlwZSI6IkxPQ0FMIiwidGVuYW50IjoiaWRjcy1lYWYwMzhhMzBmZGE0OTU0YjQ3MzkwOGFhMGYwNDAwNyIsImp0aSI6IjFlMTA1YWM3LWVlODMtNGYzMS05ZTk4LTczMWI0M2VlOGY2OSIsInVzZXJfZGlzcGxheW5hbWUiOiJDbG91ZCBBZG1pbiIsInN1Yl9tYXBwaW5nYXR0ciI6InVzZXJOYW1lIiwidG9rX3R5cGUiOiJBVCIsImF1ZCI6WyJodHRwczpcL1wvN0EyOUUwQjc2MDYyNDI0MTkxREFFNEVENzFFQUUwQkEuYXBpcGxhdGZvcm0ub2NwLm9yYWNsZWNsb3VkLmNvbTo0NDMiLCJ1cm46b3BjOmxiYWFzOmxvZ2ljYWxndWlkPTdBMjlFMEI3NjA2MjQyNDE5MURBRTRFRDcxRUFFMEJBIl0sInVzZXJfaWQiOiIwMDlmZjQ3MGRmMTQ0NjMwOTcxZmRlYzYyNTg3NjJkNCJ9.YgcY2ulEy6yLYi4T63oE-eKCf30HHgarm6NxaDZ0R5nnoYL6tlLoM0ADoHw0dA0ntGcE4WCZikHGSI7nlZzdonaGlDS1VKxX_hq4LDE_swq8nVuyHrx0GfgAsPpIVu_-Tw-yKXYAvE88Bzdcqy7EPf241h5NeDYX9Dhjxe7TJfrBZt2YPBmtxlw7lUwhXbPrUjCRAvnbTZILAuBM9IcR0gJp67b6qhDjc8bywlorN1kxjssByEj33k2Usn9O9d_odiECr9qnUFAcjXu_9h7ryeSrKAIXHVEXVtdYWv245JVtlb70O5_zHN-iQrwq22kqkHIZxdHVs-K5bfK1h1izxg"
+
+  tasks:
+  - name: Check if APICS already installed
+    stat:
+      path: "{{download_folder}}/gateway/APIGateway"
+    register: apics
+
+  - name: Create Directory
+    file:
+      path: "{{download_folder}}/gateway"
+      state: directory
+      owner: ec2-user
+      group: ec2-user
+      recurse: yes
+
+  - name: Download ApicsGatewayInstaller
+    get_url:
+      url: "{{download_url}}"
+      dest: "{{archive}}"
+    when: not apics.stat.exists
+
+  - name: Unpack archive
+    unarchive:
+      src: "{{archive}}"
+      dest: "{{download_folder}}/gateway"
+      creates: "{{download_folder}}/gateway/APIGateway"
+      remote_src: yes
+
+  - name: Fix ownership
+    file:
+      state: directory
+      path: "{{download_folder}}/gateway"
+      owner: "{{user}}"
+      group: "{{user}}"
+      recurse: yes
+
+  - name: Clean up
+    file:
+      state: absent
+      path: "{{archive}}"
+
+  - name: Install pexpect
+    pip:
+      name: pexpect
+
+  - name: Copy gateway-props file
+    copy:
+      src: /home/ec2-user/local-gateway-props.json
+      dest: /opt/oracle/local-gateway-props.json
+      remote_src: yes
+
+
+  - name: Call install-configure-start-join (takes a while ~8 min)
+    become: false
+    expect:
+      command: "./APIGateway -f ../../local-gateway-props.json -a install-configure-start-join"
+      chdir: "/opt/oracle/binaries/gateway/"
+      timeout: 600
+      responses:
+        'Please enter user name for weblogic*' : "{{gateway_user}}"
+        'Password*' :
+          - "{{gateway_user_pass}}"
+          - "{{gateway_manager_pass}}"
+          - "{{gateway_manager_runtime_pass}}"
+          - "{{gateway_manager_runtime_pass}}"
+        'This action will now cleanup existing gateway*' : "y"
+        'Please enter gateway manager user*' : "{{gateway_manager_user}}"
+        'Please enter gateway manager client id*' : "{{client_id}}"
+        'Please enter gateway manager client secret*' : "{{client_secret}}"
+        'Please enter gateway manager runtime user*' : "{{gateway_manager_runtime_user}}"
+        'Please enter gateway manager runtime client id*' : "{{client_id}}"
+        'Please enter gateway manager runtime client secret*' : "{{client_secret}}"
+        'Do you want to add the grant to gateway runtime user*' : "y"
+        'Please enter gateway runtime user*' : "{{gateway_manager_runtime_user}}"
+        'Would you like to create-join instead*' : "y"
+      creates: "/opt/oracle/gateway/GATEWAY_HOME"
+
+# Dialog when manually executing...
+#
+#2018-08-10 18:14:24,316 INFO Health status check execution is complete.
+#Please enter gateway manager user:
+#avio.admin
+#Password:
+#Please enter gateway manager client id:
+#7DA9D0E2587C4E1D859D3DE029316F88_APPID
+#Please enter gateway manager client secret:
+#1dd6fa38-c456-46ca-a115-a7c19d0423e4
+#Please enter gateway manager runtime user:
+#avio.admin
+#Password:
+#Please enter gateway manager runtime client id:
+#7DA9D0E2587C4E1D859D3DE029316F88_APPID
+#Please enter gateway manager runtime client secret:
+#1dd6fa38-c456-46ca-a115-a7c19d0423e4
+#2018-08-10 18:16:04,747 INFO joining gateway ...
+
+  - yum: name=jq
+
+  - name : Get Nodes
+    shell : 'curl -s -X GET -H "Authorization: Bearer {{my_token}}" {{management_url}}/gateways/{{gateway_id}}/nodes | jq ".items[].id"'
+    register : nodes_response
+
+
+  - debug :
+      msg : "Success - => '{{nodes_response.stdout_lines}}'"
+
+  - debug :
+      msg : "Nodes --> {{item}}"
+    with_items : "{{nodes_response.stdout_lines}}"
+
+
+  - name : Update State - ACTIVE
+    shell : 'curl -s -X PUT -H "Authorization: Bearer {{my_token}}" -H "Content-Type:application/json" -d ''{ "state" : "ACTIVE" }'' {{management_url}}/gateways/{{gateway_id}}/nodes/{{item}}/state'
+    with_items : "{{nodes_response.stdout_lines}}"
+
+  - debug :
+      msg : "Complete!"

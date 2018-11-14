@@ -21,7 +21,7 @@ Basic knowledge of the following tools/technologies:
 
 Execute terraform init, followed by terraform apply
 ```
-terraform@mycomputer:~/code/apics-terraform-ansible/apics/aws$ terraform init
+terraform@mycomputer:~/code/apics-terraform-ansible$ terraform init
 Initializing modules...
 - module.network
 - module.compute
@@ -44,7 +44,7 @@ Terraform has been successfully initialized!
 Then execute terraform apply
 
 ```
-terraform@mycomputer:~/code/apics-terraform-ansible/aws$ terraform apply
+terraform@mycomputer:~/code/apics-terraform-ansible$ terraform apply
 . . .
 Plan: 43 to add, 0 to change, 0 to destroy.
 
@@ -60,19 +60,48 @@ Do you want to perform these actions?
 To remove all created artifacts, just use terraform destroy
 
 ```
-terraform@mycomputer:~/code/apics-terraform-ansible/aws$ terraform destroy
+terraform@mycomputer:~/code/apics-terraform-ansible$ terraform destroy
 ```
 
-
 ## Project Structure
-The apics-terraform-ansible directory contains a few terraform files that are required for execution.
+The apics-terraform-ansible directory contains a few terraform files that are required for execution.  The automation consists of 2 modules (network, compute) that terraform executes.
 
 	| Name | Description |
 	| ---- | -------------- |
-	| terraform.template.tfvars | target/NAME_VERSION.iar | Allows direct import of an iar archive |
+	| terraform.template.tfvars | Property file, this NEEDS to be filled out.  See below for more details. |
+	| variables.tf | Describes the variables used in the different modules. |
+	| outputs.tf | Output values after creation (hostnames). |
+	| base.tf | Executes the network and compute modules. |
+	
+### network Module
+The network module contains all of the terraform automation to build out the network including a load balancer, and the networking required, including private and public subnets, and security roles.
 
-### terraform.template.tfvars Properties file
-A template properties file has been provided.  Quite a bit of information is required.  
+	| Name | Description |
+	| ---- | -------------- |
+	| variables.tf | Describes the variables used in the network module. |
+	| outputs.tf | Output values after creation (ids of the subnets). |
+	| vpc.tf | Details of all of the network resources, and their configurations. |
+	
+### compute Module
+The compute module contains all of the terraform automation to provision an AWS EC2 instance, and then invokes the Ansible scripts
+
+	| Name | Description |
+	| ---- | -------------- |
+	| variables.tf | Describes the variables used in the network module. |
+	| outputs.tf | Output values after creation (ids of the subnets). |
+	| compute.tf | Details of all of the compute resources, and their configurations and then executes the Ansible configurations. |
+
+### configure Module
+Technically not a module, but contains the playbooks for Ansible to install software.
+	
+	| Name | Description |
+	| ---- | -------------- |
+	| playbook-install-jdk8.yml | Installation and configuration of Java |
+	| playbook-install-configure-join-apicsgatewaynode.yml | Installation and configuration of the API gateway node software. |
+	| userdata.sh | Configures swap on the EC2 instaces. |
+
+## terraform.template.tfvars Properties file
+A template properties file has been provided.  This will need to be filled out to execute any of the automation. 
 
 
 ```
