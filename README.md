@@ -1,2 +1,142 @@
-# apics-terraform-ansible
-Automating APICS node creation and configuration using Terraform and Ansible
+# Automating the Creation of APICS Gateway Nodes using Terraform and Ansible on AWS
+
+## Summary
+
+Check out the blog [Automating the Creation of APICS Gateway Nodes using Terraform and Ansible on AWS](www.avioconsulting.com/blogs)
+
+The project here, is a functional example of using Terraform and the [AWS API](https://www.terraform.io/docs/providers/aws/) to create an infrasture which includes 2 compute nodes, a load balancer, and the networking required, including private and public subnets, and security roles. 
+
+Ansible playbooks are being invoked from Terraform after the creation of the compute instance.  Ansible will install and configure Java, and then install an API Gateway node and register it to APICS.
+
+## Pre-Requisites
+
+Basic knowledge of the following tools/technologies:
+
+[Oracle APICS](https://docs.oracle.com/en/cloud/paas/api-platform-cloud-um/apfad/): This the Oracle API Platform Cloud 
+[AWS](https://aws.amazon.com/): Amazon Web Services - This will be used to host our EC2 instances and application load balancer
+[Terraform](https://www.terraform.io/): A tool to write, plan, and create infrastructure as code. This is used to provision the network setup, and create the AWS compute instances
+[Ansible](https://www.ansible.com/): A tool to provide simple IT automation, including application deployment, configuration, and orchestration
+
+## Executing terraform
+
+Execute terraform init, followed by terraform apply
+```
+terraform@mycomputer:~/code/apics-terraform-ansible/apics/aws$ terraform init
+Initializing modules...
+- module.network
+- module.compute
+
+Initializing provider plugins...
+
+The following providers do not have any version constraints in configuration,
+so the latest version was installed.
+
+To prevent automatic upgrades to new major versions that may contain breaking
+changes, it is recommended to add version = "..." constraints to the
+corresponding provider blocks in configuration, with the constraint strings
+suggested below.
+
+* provider.aws: version = "~> 1.31"
+
+Terraform has been successfully initialized!
+```
+
+Then execute terraform apply
+
+```
+terraform@mycomputer:~/code/apics-terraform-ansible/aws$ terraform apply
+. . .
+Plan: 43 to add, 0 to change, 0 to destroy.
+
+Do you want to perform these actions?
+  Terraform will perform the actions described above.
+  Only 'yes' will be accepted to approve.
+
+  Enter a value: yes
+. . .
+``` 
+
+## Cleanup
+To remove all created artifacts, just use terraform destroy
+
+```
+terraform@mycomputer:~/code/apics-terraform-ansible/aws$ terraform destroy
+```
+
+
+## Project Structure
+The apics-terraform-ansible directory contains a few terraform files that are required for execution.
+
+	| Name | Description |
+	| ---- | -------------- |
+	| terraform.template.tfvars | target/NAME_VERSION.iar | Allows direct import of an iar archive |
+
+### terraform.template.tfvars Properties file
+A template properties file has been provided.  Quite a bit of information is required.  
+
+
+```
+## #################################################################################
+## AWS Properties
+## #################################################################################
+region = "us-west-2"
+owner = "kking@avioconsulting.com"
+secret-key = "waW98HyWjszRIxxsfRaRUoly8FTLPBHLQ6eI7"
+access-key = "AKIAIWABCDEFYMRMMFRIQ"
+
+## https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/finding-an-ami.html
+ami = "ami-0ad99772"
+instance-type = "m5.large"
+public-key-location = "/home/terraform/.ssh/id_rsa.pub"
+
+
+## #################################################################################
+## Oracle APICS
+## Log into management console, go to your Gateway, and click 'Installation Wizard'
+## The first screen has these APICS values.
+## #################################################################################
+
+logical-gateway = "DEV-Gateway"
+logical-gateway-id = "100"
+
+# URL to Management Portal without the context root - ${url}/apigateway
+management-service-url = "https://myinstance-gse00000001.apiplatform.ocp.oraclecloud.com:443"
+gateway-execution-mode = "Development"
+
+## From My Services -> Users -> Link at the top has 'Identity Console'
+# Example "https://idcs-eaf9a9988034raeaf9987.identity.oraclecloud.com"
+idcs-url = "https://idcs-XXXX.identity.oraclecloud.com"
+
+## https://docs.oracle.com/en/cloud/paas/api-platform-cloud/apfad/finding-scope-oracle-api-platform-cloud-service-rest-apis.html
+# Example "https://7AAFJPOEF23497850D71EAE0BA.apiplatform.ocp.oraclecloud.com:443.apiplatform"
+request-scope = "https://XXXX.apiplatform.ocp.oraclecloud.com:443.apiplatform"
+
+## https://docs.oracle.com/en/cloud/paas/api-platform-cloud/apfad/finding-your-client-id-and-client-secret.html
+# Example "REQUEST-SCOPE-PREFIX_APPID"
+client-id = "7A29E0B76062424191DAE4ED71EAE0BA_APPID"
+# Example: "abcd1234-0000-1922-0613-80abbcd9aac2ab"
+client-secret = "abcd1234-0000-1922-0613-80abbcd9aac2ab"
+
+
+## #################################################################################
+## Ansible playbook variables for software installation and configuration
+## #################################################################################
+
+# A location to the installer zip (ApicsGatewayInstaller.zip) needs to be provided, login and download the installer from APICS management portal
+download-url = "https://hostedurl/ApicsGatewayInstaller.zip"
+
+# user defined when installing and configuring the node
+gateway-user = "gatewayuser"
+gateway-user-pass = "Gateway1234"
+
+# APICS management API users - These are actual users defined in APICS
+gateway-manager-user = "cloud.admin"
+gateway-manager-pass = "changeme"
+gateway-manager-runtime-user = "cloud.admin"
+gateway-manager-runtime-pass = "changeme"
+
+## https://docs.oracle.com/en/cloud/paas/api-platform-cloud/apfrm/Authentication.html
+# Large token string from .tok file 
+apics-token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX3R6IjoiQW1lcmljYS9DaGljYWdvIiwic3ViIjoiW1wbGUiLCJ0ZW5hbnQiOiJzYW1wbGUiLCJqdGkiOiJzYW1wbGUifQ"
+```
+
