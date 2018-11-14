@@ -2,7 +2,7 @@
 
 ## Summary
 
-Check out the blog [Automating the Creation of APICS Gateway Nodes using Terraform and Ansible on AWS](www.avioconsulting.com/blogs)
+Check out the blog [Automating the Creation of APICS Gateway Nodes using Terraform and Ansible on AWS](https://www.avioconsulting.com/blog/)
 
 The project here, is a functional example of using Terraform and the [AWS API](https://www.terraform.io/docs/providers/aws/) to create an infrasture which includes 2 compute nodes, a load balancer, and the networking required, including private and public subnets, and security roles. 
 
@@ -12,10 +12,10 @@ Ansible playbooks are being invoked from Terraform after the creation of the com
 
 Basic knowledge of the following tools/technologies:
 
-[Oracle APICS](https://docs.oracle.com/en/cloud/paas/api-platform-cloud-um/apfad/): This the Oracle API Platform Cloud 
-[AWS](https://aws.amazon.com/): Amazon Web Services - This will be used to host our EC2 instances and application load balancer
-[Terraform](https://www.terraform.io/): A tool to write, plan, and create infrastructure as code. This is used to provision the network setup, and create the AWS compute instances
-[Ansible](https://www.ansible.com/): A tool to provide simple IT automation, including application deployment, configuration, and orchestration
+* [Oracle APICS](https://docs.oracle.com/en/cloud/paas/api-platform-cloud-um/apfad/): This the Oracle API Platform Cloud 
+* [AWS](https://aws.amazon.com/): Amazon Web Services - This will be used to host our EC2 instances and application load balancer
+* [Terraform](https://www.terraform.io/): A tool to write, plan, and create infrastructure as code. This is used to provision the network setup, and create the AWS compute instances
+* [Ansible](https://www.ansible.com/): A tool to provide simple IT automation, including application deployment, configuration, and orchestration
 
 ## Executing terraform
 
@@ -66,15 +66,15 @@ terraform@mycomputer:~/code/apics-terraform-ansible$ terraform destroy
 ## Project Structure
 The apics-terraform-ansible directory contains a few terraform files that are required for execution.  The automation consists of 2 modules (network, compute) that terraform executes.
 
-	| Name | Description |
-	| ---- | -------------- |
-	| terraform.template.tfvars | Property file, this NEEDS to be filled out.  See below for more details. |
-	| variables.tf | Describes the variables used in the different modules. |
-	| outputs.tf | Output values after creation (hostnames). |
-	| base.tf | Executes the network and compute modules. |
+| Name | Description |
+| ---- | -------------- |
+| terraform.template.tfvars | Property file, this NEEDS to be filled out.  See below for more details. |
+| variables.tf | Describes the variables used in the different modules. |
+| outputs.tf | Output values after creation (hostnames). |
+| base.tf | Executes the network and compute modules. |
 	
-### network Module
-The network module contains all of the terraform automation to build out the network including a load balancer, and the networking required, including private and public subnets, and security roles.
+### Network Module
+The network module (in the network folder) contains all of the terraform automation to build out the network including a load balancer, and the networking required, including private and public subnets, and security roles.
 
 	| Name | Description |
 	| ---- | -------------- |
@@ -82,8 +82,8 @@ The network module contains all of the terraform automation to build out the net
 	| outputs.tf | Output values after creation (ids of the subnets). |
 	| vpc.tf | Details of all of the network resources, and their configurations. |
 	
-### compute Module
-The compute module contains all of the terraform automation to provision an AWS EC2 instance, and then invokes the Ansible scripts
+### Compute Module
+The compute module (in the computer folder) contains all of the terraform automation to provision an AWS EC2 instance, and then invokes the Ansible scripts
 
 	| Name | Description |
 	| ---- | -------------- |
@@ -91,8 +91,8 @@ The compute module contains all of the terraform automation to provision an AWS 
 	| outputs.tf | Output values after creation (ids of the subnets). |
 	| compute.tf | Details of all of the compute resources, and their configurations and then executes the Ansible configurations. |
 
-### configure Module
-Technically not a module, but contains the playbooks for Ansible to install software.
+### Configure Module
+Technically not a module, but the configure folder contains the playbooks for Ansible to install software.
 	
 	| Name | Description |
 	| ---- | -------------- |
